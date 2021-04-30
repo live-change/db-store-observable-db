@@ -1,0 +1,32 @@
+{
+  "name": "@live-change/db-store-observable-db",
+  "version": "0.1.21",
+  "description": "Database with observable data for live queries",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test tape tests/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/live-change/db-store-observable-db.git"
+  },
+  "author": {
+    "email": "m8@em8.pl",
+    "name": "Michał Łaszczewski",
+    "url": "https://www.viamage.com/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/live-change/db-store-observable-db/issues"
+  },
+  "homepage": "https://github.com/live-change/db-store-observable-db",
+  "devDependencies": {
+    "tape": "^4.11.0"
+  },
+  "dependencies": {
+    "@live-change/dao": "^0.2.22",
+    "bufferutil": "^4.0.3",
+    "utf-8-validate": "^5.0.4",
+    "ws": "^7.4.5"
+  }
+}
