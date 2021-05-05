@@ -1,33 +1,23 @@
 const test = require('tape')
-const lmdb = require('node-lmdb')
-const rimraf = require("rimraf")
-const fs = require("fs")
 
 const Store = require('../lib/Store.js')
+const { prepareDatabaseTest } = require('./utils.js')
 
-const dbPath = `./test.lro.db`
-rimraf.sync(dbPath)
-fs.mkdirSync(dbPath)
-const env = new lmdb.Env();
-env.open({
-  // Path to the environment
-  path: dbPath,
-  // Maximum number of databases
-  maxDbs: 10
-})
-const dbi = env.openDbi({
-  name: "test",
-  create: true
-})
+const serverUrl = "ws://localhost:3530/api/ws"
+const dbName = "test"
+const storeName = "test"
+const connection = new Store.Connection(serverUrl)
 
 test("store range observable", t => {
-  t.plan(5)
+  t.plan(6)
 
   let store
 
+  prepareDatabaseTest(t, connection, dbName, storeName)
+
   t.test("create store", async t => {
     t.plan(1)
-    store = new Store(env, dbi)
+    store = new Store(connection, dbName, storeName)
     t.pass('store created')
   })
 
@@ -72,8 +62,8 @@ test("store range observable", t => {
       t.plan(1)
       await store.delete('b_6')
       objects.splice(3, 1)
-      await getNextValue() // one shorter
       let values = await getNextValue()
+      if(values.length != 5) values = await getNextValue()
       t.deepEqual(values, objects.slice(0, 5), 'range value' )
     })
 
@@ -107,8 +97,8 @@ test("store range observable", t => {
       t.plan(1)
       await store.delete('b_58')
       objects.splice(4, 1)
-      await getNextValue()
       let values = await getNextValue()
+      if(values.length != 5) values = await getNextValue()
       t.deepEqual(values, objects.slice(0, 5), 'range value' )
     })
 
@@ -158,8 +148,8 @@ test("store range observable", t => {
       t.plan(1)
       await store.delete('b_48')
       objects.splice(6, 1)
-      await getNextValue()
       let values = await getNextValue()
+      if(values.length != 3) values = await getNextValue()
       t.deepEqual(values, objects.slice(6,9) , 'range value' )
     })
 
@@ -172,11 +162,9 @@ test("store range observable", t => {
 
   t.test("close and remove database", async t => {
     t.plan(1)
-    dbi.close()
-    env.close()
-    rimraf(dbPath, (err) => {
-      if(err) return t.fail(err)
-      t.pass('removed')
-    })
+    await connection.deleteDatabase(dbName)
+    await connection.close()
+    t.pass('closed')
+    t.end()
   })
 })
