@@ -1,6 +1,6 @@
 {
   "name": "@live-change/db-store-observable-db",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Database backend protocol",
   "main": "index.js",
   "scripts": {
