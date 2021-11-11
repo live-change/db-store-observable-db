@@ -23,7 +23,7 @@ test("store non-reactive properties", t => {
   })
 
   t.test("non reactive operations", async t => {
-    t.plan(24)
+    t.plan(25)
 
     t.test("put value", async t => {
       t.plan(1)
@@ -77,6 +77,13 @@ test("store non-reactive properties", t => {
       let values = await store.countGet({ gte: 'a', lte: 'c' })
       t.deepEqual(values, 3, 'range count' )
     })
+
+    t.test("count all", async t => {
+      t.plan(1)
+      let values = await store.countGet({ })
+      t.deepEqual(values, 3, 'full count' )
+    })
+
 
     t.test("get reverse range [c,a]", async t => {
       t.plan(1)
